@@ -1,0 +1,21 @@
+﻿<Window x:Class="EasyNote.Client.OpenFileDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EasyNote.Client"
+        mc:Ignorable="d"
+        Title="OpenFileDialog" Height="250" Width="330">
+    <Grid>
+        <ListView HorizontalAlignment="Left"  VerticalAlignment="Top" Name="allFiles">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Name" Width="200" DisplayMemberBinding="{Binding Name}" />
+                    <GridViewColumn Header="Author" Width="100" DisplayMemberBinding="{Binding Author}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button Content="Select" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="75" Click="Button_Click"/>
+
+    </Grid>
+</Window>
