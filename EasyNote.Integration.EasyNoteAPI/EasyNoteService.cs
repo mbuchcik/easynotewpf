@@ -29,30 +29,30 @@ namespace EasyNote.Integration.EasyNoteAPI
         public IEnumerable<FileQueryResponse> Get()
         {
             return gateway.ExecuteApiQuery<IEnumerable<FileQueryResponse>>("files/list",
-                Method.GET, HttpStatusCode.OK, logonInfo.Auth_token);
+                Method.GET, HttpStatusCode.OK, logonInfo.authToken);
         }
         public FileQueryResponse Get(int id)
         {
             return gateway.ExecuteApiQuery<FileQueryResponse>($"files/get/{id}",
-                Method.GET, HttpStatusCode.OK, logonInfo.Auth_token);
+                Method.GET, HttpStatusCode.OK, logonInfo.authToken);
         }
 
         public void Add(CreateFileCommand command)
         {
             gateway.ExecuteAPICommand("files/create",
-                Method.POST, command, HttpStatusCode.Created, logonInfo.Auth_token);
+                Method.POST, command, HttpStatusCode.Created, logonInfo.authToken);
         }
 
         public void Update(UpdateFileCommand command)
         {
             gateway.ExecuteAPICommand("files/update",
-                Method.PUT, command, HttpStatusCode.OK, logonInfo.Auth_token);
+                Method.PUT, command, HttpStatusCode.OK, logonInfo.authToken);
         }
 
         public void Delete(int id)
         {
             gateway.ExecuteApiQuery($"files/delete/{id}",
-                Method.GET, HttpStatusCode.OK, logonInfo.Auth_token);
+                Method.GET, HttpStatusCode.OK, logonInfo.authToken);
         }
 
         public LogonInfo Login(UserInfo userInfo)

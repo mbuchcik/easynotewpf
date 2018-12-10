@@ -4,8 +4,9 @@ namespace EasyNote.Integration.EasyNoteAPI.Model
 {
     public class LogonInfo
     {
-        public string Id { get; set; }
-        public string Auth_token { get; set; }
-        public int Expires_in { get; set; }
+        public string id { get; set; }
+        public string userName { get; set; }
+        public string authToken { get; set; }
+        public int expiresIn { get; set; }
     }
 }

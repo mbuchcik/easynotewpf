@@ -17,6 +17,7 @@ namespace EasyNote.Client
         {
             Globals.Credentials = new UserInfo
             {
+                 UserName = txtName.Text,
                 Email = txtName.Text,
                 Password = txtPassword.Password
             };

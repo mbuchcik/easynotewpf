@@ -1,6 +1,9 @@
 ﻿using Autofac;
 using EasyNote.Integration.EasyNoteAPI;
 using EasyNote.Integration.EasyNoteAPI.Model;
+using EasyNote.Integration.EasyNoteWebSockets;
+using Microsoft.AspNetCore.SignalR.Client;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Windows;
@@ -17,6 +20,7 @@ namespace EasyNote.Client
         public bool FileExistsInServer { get; set; }
 
         private readonly IEasyNoteService service;
+        private readonly EasyNoteHubService signalr;
 
         public MainWindow()
         {
@@ -36,7 +40,39 @@ namespace EasyNote.Client
                     try
                     {
                         var logonInfo = service.Login(Globals.Credentials);
-                        loginSuccess = true;
+                        signalr = new EasyNoteHubService();
+
+                        signalr.connection.On<string>("FileGotLocked", message => {
+                        if (Globals.CurrentlyOpenedFile != null && Globals.CurrentlyOpenedFile.Id == int.Parse(message))
+                            {
+                                if (!TextChanged)
+                                {
+                                    Globals.CurrentlyOpenedFile.IsLocked = true;
+                                    Globals.IsReadOnly = true;
+                                    this.Dispatcher.Invoke(() =>
+                                    {
+                                        fileContent.IsReadOnly = true;
+                                    });
+                                }
+                                
+                            }
+                        });
+
+                        signalr.connection.On<string>("FileGotUnlocked", message => {
+                            if (Globals.CurrentlyOpenedFile != null && Globals.CurrentlyOpenedFile.Id == int.Parse(message))
+                            {
+                                Globals.CurrentlyOpenedFile.IsLocked = false;
+                                Globals.IsReadOnly = false;
+                                this.Dispatcher.Invoke(() =>
+                                {
+                                    fileContent.IsReadOnly = false;
+                                 });
+                            }
+                        });
+
+
+                        signalr.Connect().ContinueWith(a=> { MessageBox.Show(a.Result.ToString()); });
+                            loginSuccess = true;
                     }
                     catch (Exception ex)
                     {
@@ -49,7 +85,6 @@ namespace EasyNote.Client
             }
 
         }
-
         private void SetWindowName(string v)
         {
             this.Title = v + " - Easy Note";
@@ -66,8 +101,17 @@ namespace EasyNote.Client
 
         private void fileContent_TextChanged(object sender, TextChangedEventArgs e)
         {
+            if (TextChanged)
+                if (Globals.CurrentlyOpenedFile != null)
+                    signalr.LockFile(JsonConvert.SerializeObject(Globals.CurrentlyOpenedFile));
+
             if (!TextChanged)
+            {
                 TextChanged = true;
+               
+            }
+            
+
         }
 
         private void openButton_click(object sender, RoutedEventArgs e)
@@ -77,7 +121,10 @@ namespace EasyNote.Client
             {
                 this.Title = Globals.CurrentlyOpenedFile.Name;
                 fileContent.Text = Globals.CurrentlyOpenedFile.Content;
+                fileContent.IsReadOnly = Globals.CurrentlyOpenedFile.IsLocked;
+                TextChanged = false;
             }
+            TextChanged = false;
         }
 
         private void saveButton_Click(object sender, RoutedEventArgs e)
@@ -105,6 +152,7 @@ namespace EasyNote.Client
                         Content = fileContent.Text,
                         Name = Globals.CurrentlyOpenedFile.Name
                     });
+                    signalr.UnlockFile(JsonConvert.SerializeObject(Globals.CurrentlyOpenedFile));
                 }
                 else
                 {

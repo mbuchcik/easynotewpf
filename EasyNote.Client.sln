@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyNote.Integration.EasyNo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyNote.Application.Core", "EasyNote.Application.Core\EasyNote.Application.Core.csproj", "{F7DF825C-0872-4D05-9125-89FB80E30994}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyNote.Integration.EasyNoteWebSockets", "EasyNote.Integration.EasyNoteWebSockets\EasyNote.Integration.EasyNoteWebSockets.csproj", "{9FB8144C-2F52-467C-A3D3-6F8EDFA00D5E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{F7DF825C-0872-4D05-9125-89FB80E30994}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7DF825C-0872-4D05-9125-89FB80E30994}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7DF825C-0872-4D05-9125-89FB80E30994}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FB8144C-2F52-467C-A3D3-6F8EDFA00D5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FB8144C-2F52-467C-A3D3-6F8EDFA00D5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FB8144C-2F52-467C-A3D3-6F8EDFA00D5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FB8144C-2F52-467C-A3D3-6F8EDFA00D5E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
