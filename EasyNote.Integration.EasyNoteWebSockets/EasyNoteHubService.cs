@@ -51,5 +51,25 @@ namespace EasyNote.Integration.EasyNoteWebSockets
                 connection.InvokeAsync("UnlockFile", content);
         }
 
+        public void ForbidUnlockingFile(string fileId, string name)
+        {
+            if (connection.State == HubConnectionState.Disconnected)
+            {
+                connection.StartAsync().ContinueWith(z => { connection.InvokeAsync("ForbidUnlockingFile", fileId, name); });
+            }
+            else
+                connection.InvokeAsync("ForbidUnlockingFile", fileId, name);
+        }
+
+        public void RequestUnlockingFile(string fileId, string name)
+        {
+            if (connection.State == HubConnectionState.Disconnected)
+            {
+                connection.StartAsync().ContinueWith(z => { connection.InvokeAsync("RequestUnlockingFile", fileId, name); });
+            }
+            else
+                connection.InvokeAsync("RequestUnlockingFile", fileId, name);
+        }
+
     }
 }

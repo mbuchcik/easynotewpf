@@ -70,6 +70,41 @@ namespace EasyNote.Client
                             }
                         });
 
+                        signalr.connection.On<string,string>("UnlockFileRequested", (fileId, requestor) => {
+                            if (Globals.CurrentlyOpenedFile != null && Globals.CurrentlyOpenedFile.Id == int.Parse(fileId))
+                            {
+                                this.Dispatcher.Invoke(() =>
+                                {
+                                    var choice = MessageBox.Show($"{requestor} wants to unlock this file, do You allow?","Unlocking request",
+                                        MessageBoxButton.YesNo,
+                                        MessageBoxImage.Question);
+
+                                    switch (choice)
+                                    {
+                                        case MessageBoxResult.Yes:
+                                            signalr.UnlockFile(fileId);
+                                            break;
+                                        case MessageBoxResult.No:
+                                            signalr.ForbidUnlockingFile(fileId, Globals.Credentials.UserName);
+                                            break;
+                                        default: break;
+                                    }
+                                });
+                            }
+                        });
+
+                        signalr.connection.On<string, string>("UnlockingFileForbidden", (fileId, forbidder) => {
+                            if (Globals.CurrentlyOpenedFile != null && Globals.CurrentlyOpenedFile.Id == int.Parse(fileId))
+                            {
+                                this.Dispatcher.Invoke(() =>
+                                {
+                                    MessageBox.Show($"{forbidder} did not allow to unlock this file.", "Unlocking forbidden",
+                                        MessageBoxButton.OK,
+                                        MessageBoxImage.Information);
+                                });
+                            }
+                        });
+
 
                         signalr.Connect().ContinueWith(a=> { MessageBox.Show(a.Result.ToString()); });
                             loginSuccess = true;
@@ -123,6 +158,24 @@ namespace EasyNote.Client
                 fileContent.Text = Globals.CurrentlyOpenedFile.Content;
                 fileContent.IsReadOnly = Globals.CurrentlyOpenedFile.IsLocked;
                 TextChanged = false;
+
+                if (fileContent.IsReadOnly)
+                {
+                    var choice = MessageBox.Show($"File is currently locked, do You want to ask for unlocking?", "Unlocking request",
+                                        MessageBoxButton.YesNo,
+                                        MessageBoxImage.Question);
+
+                    switch (choice)
+                    {
+                        case MessageBoxResult.Yes:
+                            signalr.RequestUnlockingFile(Globals.CurrentlyOpenedFile.Id.ToString(), Globals.Credentials.UserName);
+                            break;
+                        case MessageBoxResult.No:
+                            break;
+                        default: break;
+                    }
+                }
+                
             }
             TextChanged = false;
         }
