@@ -17,7 +17,7 @@ namespace EasyNote.Integration.EasyNoteWebSockets
         {
             connection = new HubConnectionBuilder()
                //.WithUrl(ConfigurationManager.AppSettings["HubURL"])
-               .WithUrl("http://localhost:64798/easynotehub")
+               .WithUrl("http://easynotebbj.azurewebsites.net/easynotehub")
                .Build();
         }
 

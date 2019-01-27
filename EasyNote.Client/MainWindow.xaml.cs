@@ -71,7 +71,8 @@ namespace EasyNote.Client
                         });
 
                         signalr.connection.On<string,string>("UnlockFileRequested", (fileId, requestor) => {
-                            if (Globals.CurrentlyOpenedFile != null && Globals.CurrentlyOpenedFile.Id == int.Parse(fileId))
+                            if (Globals.CurrentlyOpenedFile != null && Globals.CurrentlyOpenedFile.Id == int.Parse(fileId)
+                            && !(requestor.ToString() == Globals.Credentials.Email || requestor.ToString() == Globals.Credentials.UserName))
                             {
                                 this.Dispatcher.Invoke(() =>
                                 {
@@ -105,6 +106,9 @@ namespace EasyNote.Client
                             }
                         });
 
+                        signalr.connection.On("FilesListChanged", () => {
+                            MessageBox.Show("File list got updated!");
+                        });
 
                         signalr.Connect().ContinueWith(a=> { MessageBox.Show(a.Result.ToString()); });
                             loginSuccess = true;
